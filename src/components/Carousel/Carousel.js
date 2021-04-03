@@ -10,19 +10,18 @@ class Carousel extends Component {
     }
 
     componentDidMount() {
-        console.log("mounted")
+        // console.log("mounted")
         document.addEventListener('keydown', this.keyPressHandler)
     }
     
     //Handlers to move to the next and previous slides
     prevSlideHandler = () => {
-        
-        console.log("previous slide")
+        // console.log("previous slide")
         let newPosition = this.state.sliderPosition;
         if (newPosition > 0){
             newPosition =  newPosition - 1 ;
         } else if (this.props.infinite) {
-            console.log('infinity!!!!')
+            // console.log('infinity!!!!')
             newPosition = this.props.children.length - 1;
         }  else {
             return
@@ -34,27 +33,25 @@ class Carousel extends Component {
         this.setState({ sliderPosition: newPosition}) //did this since updating state is async, leades to problems in scrolling
         return;
     }
-    nextSlideHandler = () => {
 
-        console.log("next slide")
-        console.log('old position: ' + this.state.sliderPosition)
+    nextSlideHandler = () => {
+        // console.log("next slide")
+        // console.log('old position: ' + this.state.sliderPosition)
         let newPosition = this.state.sliderPosition;
         if (newPosition < this.props.children.length - 1){
             newPosition = newPosition + 1;
-            console.log('increased position: ' + this.state.sliderPosition)
+            // console.log('increased position: ' + this.state.sliderPosition)
         } else if (this.props.infinite) {
-            console.log('infinity!!!!')
+            // console.log('infinity!!!!')
             newPosition = 0
         } else {
             return //without this return, if inifinite scrolling is disabled we might see 2 elements overlap (in case one didn't occupy full width)
         }
         const divToScrollTo = document.getElementById(`carouselitem` + newPosition);
         if (divToScrollTo) {
-            // setTimeout(elem.setAttribute("style","overflow-x: auto;"), 1000)
             divToScrollTo.scrollIntoView({ behavior: 'smooth' });
         }
         this.setState({ sliderPosition: newPosition}) 
-        
     }
 
     //Handler to jump to a specific slide
@@ -86,42 +83,43 @@ class Carousel extends Component {
     }
 
     touchStartHandler = (e) => {
-        console.log('touchstart')
+        // console.log('touchstart')
         this.setState({touchStartPosition: e.targetTouches[0].clientX})
     }
 
     touchMoveHandler = (e) => {
-        console.log('touchmove')
+        // console.log('touchmove')
         this.setState({touchEndPosition: e.targetTouches[0].clientX})
         let elem = document.getElementById(`carouselitem` + this.state.sliderPosition)
+        // console.log(elem)
         let translateDist = this.state.touchEndPosition - this.state.touchStartPosition
-        console.log("moving: " + translateDist  + " px")
+        // console.log("moving: " + translateDist  + " px")
         elem.setAttribute("style", `transform: translate(`+translateDist+`px)`)
     }
     
     touchEndHandler = (e) => {
         //we set the element that we want to return to its position before changing the sliderPosition
         let elem = document.getElementById(`carouselitem` + this.state.sliderPosition)
-        elem.style.transitionDuration = 2;
-        console.log(elem)
-        // elem.setAttribute("style", `transition-duration: ` + Math.abs(this.state.touchEndPosition - this.state.touchStartPosition)/1000 + `s ease-out`)
-        elem.setAttribute("style", `transform: translate(`+ this.state.touchStartPosition - this.state.touchEndPosition +`px);`)
-        console.log(elem)
+        //snap the element to its position
+        elem.classList.add(classes.SlowAnimation);
+        elem.setAttribute("style", `transform: translateX(`+ (this.state.touchStartPosition - this.state.touchEndPosition) +`px) 0.5s ease-in-out`)
+        // console.log(elem)
         //left swipe
         if (this.state.touchStartPosition - this.state.touchEndPosition > 100) {
-            console.log('touchend left swipe');
+            // console.log('touchend left swipe');
             this.nextSlideHandler()
         }
         //right swipe
         else if (this.state.touchStartPosition - this.state.touchEndPosition < -100) {
-            console.log('touchend right swipe');
+            // console.log('touchend right swipe');
             this.prevSlideHandler()
         }
-        // Initially had a case for swipe cancelled. But our algorithm can do without it now
+        elem.classList.remove(classes.SlowAnimation);
+        // Initially had a case for swipe cancelled. That was when scrolling instead of translating
     }
 
     render () {
-        console.log("current position: " + this.state.sliderPosition)
+        // console.log("current slider position: " + this.state.sliderPosition)
         return (
             <div>
                 <div className={classes.container} >
@@ -133,12 +131,9 @@ class Carousel extends Component {
                         onTouchMove={(e) => this.touchMoveHandler(e)}
                         onTouchEnd={(e) =>  this.touchEndHandler(e)}
                     >
-                        {/* <div id="DisplayFilm" className={classes.DisplayFilm}> */}
-                            {this.props.children.map((child, index) => (
-                                <div className={classes.CarouselItem} id={`carouselitem` + index} key={index}>{this.props.children[index]}</div>
-                            ))}
-                        {/* </div> */}
-                        
+                        {this.props.children.map((child, index) => (
+                            <div className={classes.CarouselItem} id={`carouselitem` + index} key={index}>{this.props.children[index]}</div>
+                        ))}
                     </div>
                     <div className={classes.RightArrow} onClick={this.nextSlideHandler}>❱</div>
                 </div>
@@ -152,7 +147,6 @@ class Carousel extends Component {
                                 key={index}
                                 onClick = {() => this.jumpToSlideHandler(index)}
                                 >    
-                                {console.log(index)}
                             </div>
                         )
                     )}
