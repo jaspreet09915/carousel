@@ -1,0 +1,150 @@
+.DisplayFrame{
+    /* touch-action: none; */
+    border-radius: 10px;
+    /* border: solid #778899; */
+    width: 95vw;
+    height: calc(95vw * 0.5625);
+    max-height: 90vh;
+    max-width: calc(90vh * 1.78); /* maintain a 16:9 aspect ratio */
+    margin: auto;
+    text-align: center;
+    background-color: #eaebec;
+    overflow-y: hidden;
+    overflow-x: auto;
+    white-space: nowrap;
+    /* user-select: none;*/ 
+    /*disable keyboard controls from messing up with functionality (if there is text), can remove if keyboard preventdefault is used */
+}
+
+.DisplayFrame::-webkit-scrollbar {
+    display: none;
+}
+
+/* .DisplayFilm{
+    border-radius: 10px;
+    width: 95vw;
+    height: calc(95vw * 0.5625);
+    max-height: 90vh;
+    margin: auto;
+    text-align: center;
+    background-color: #eaebec;
+    overflow-y: hidden;
+    overflow-x: visible;
+    white-space: nowrap;
+}
+.DisplayFilm::-webkit-scrollbar {
+    display: none;
+} */
+
+.CarouselItem{
+    touch-action: none;
+    height: 100%;
+    width: 100%; 
+    display: inline-block; 
+    vertical-align: top;
+    margin-right: 2px;
+    transition: all 0.3s ease-out;
+    /* user-select: none; */
+    /* the margin avoids slices from adjacent elements appearing */
+}
+
+.LeftArrow{
+    position: absolute;
+    left: 1%;
+    padding-left: 2px;
+    padding-right: 2px;
+    font-size: xx-large;
+    color: #aabbcc;
+    user-select: none; /* avoid showing a blinking cursor when clicked */
+}
+.LeftArrow:hover{
+    color: #bbccdd;
+}
+.LeftArrow:active{
+    color: #206ebd;
+    
+}
+
+.RightArrow{
+    position: absolute;
+    right: 1%;
+    padding-right: 2px;
+    padding-left: 2px;
+    font-size: xx-large;
+    color: #aabbcc;
+    user-select: none; 
+}
+.RightArrow:hover{
+    color: #bbccdd;
+}
+.RightArrow:active{
+    color: #206ebd;
+}
+
+.container {
+    position: relative;
+    display: flex;
+    vertical-align: middle;
+    overflow: hidden; 
+    width: 100%; 
+    align-items: center;
+}
+
+.Navigation {
+    width: 50%;
+    justify-content: center;
+    display: flex;
+    margin: 0.5% auto;
+    color: transparent;
+}
+
+.PositionIndicator{
+    box-sizing: border-box;
+    width: 2vw;
+    height: 2vw;
+    border: 1px solid #aabbcc;
+    border-radius: 50%;
+    margin: 2px;
+}
+.PositionIndicator:hover{
+    background: #ccddee;
+}
+.PositionIndicator:active{
+    background: #206ebd;
+}
+
+.CurrentPosition{
+    box-sizing: border-box;
+    border: 1px solid #778899;
+    background:#aabbcc
+}
+
+img{
+    height: 100%;
+    max-width: 100%;
+    /* with max-width: 101%, the margin will not take a visible slice, keeping the rounded borders good looking*/
+    /* border-radius: 10px;   */
+    background-color: none;
+}
+
+.stop-scrolling {
+    width: 100%;
+    overflow: hidden;
+}
+
+#CascadedChildren{
+    height: 100%;
+    width: 100%; 
+    display: inline-block; 
+    vertical-align: top;
+    margin-right: 2px;
+}
+
+@media (max-width: 600px) {
+    .PositionIndicator{
+        width: 2vh;
+        height: 2vh;
+        /* in case the screen is in portrait, not to have small dots */
+    }
+  }
+
