@@ -1,2 +1,2 @@
-# casourel
-This is a casourel that works using touch, keyboard, and swipes. Created using react
+# carousel
+This is a carousel that works using touch, keyboard, and swipes. Created using react
