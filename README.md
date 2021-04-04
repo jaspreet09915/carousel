@@ -27,7 +27,7 @@ you can proceed by renaming the Carousel.css file to Carousel.module.css (do not
 # Proposed updates
 There CarouselSuggestions file in the ```carousel/src/components/Carousel/``` folder contains some proposed JS code.
 This code will be ameliorated in the future to add features to the carousel.
-Below you will find features that I plan to add in the future
+Below you will find features that I plan to add in the future.
 
 * Timer: The timer is supposed to move to the next slide in the carousel. Its code is working, yet it needs to be reset on click, swipe, and keyboard input.
 * Timer interval: Set a given time interval for the timer
