@@ -70,7 +70,7 @@
     color: #206ebd;
 }
 
-.container {
+.Container {
     position: relative;
     display: flex;
     vertical-align: middle;
@@ -80,7 +80,8 @@
 }
 
 .Navigation {
-    width: 50%;
+    width: 90%;
+    max-width: calc(90vh * 1.78); /*it doesn't flow outside the frame's width */
     justify-content: center;
     display: flex;
     margin: 0.5% auto;

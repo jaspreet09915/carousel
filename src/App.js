@@ -5,8 +5,7 @@ class App extends Component {
     render () {
         return (
             <div>
-                {/*you can add infinite to Casourel */}
-                Carousel
+                <h5 style={{textAlign: "center"}}>Carousel</h5>
                 <Carousel infinite>
                     <img src="https://images.all-free-download.com/images/graphicthumb/beautiful_scenery_02_hd_picture_166319.jpg" alt="sample image" />
                     <img src="https://images.unsplash.com/photo-1595835018349-198460e1d309?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8MTYlM0E5fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="sample image"/>
@@ -19,6 +18,7 @@ class App extends Component {
                     <img src="https://www.w3schools.com/css/img_5terre_wide.jpg" alt="sample image" />
                     <img src="https://wallpapercave.com/wp/wp2419380.jpg" alt="sample image" />
                 </Carousel>
+                
             </div>
         );
     }

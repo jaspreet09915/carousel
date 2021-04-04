@@ -12,8 +12,20 @@ class Carousel extends Component {
     componentDidMount() {
         // console.log("mounted")
         document.addEventListener('keydown', this.keyPressHandler)
+        window.addEventListener('resize', this.resizeHandler);
     }
     
+    resizeHandler = () => {
+        var that = this;
+        //on resize rescroll to same view
+        setTimeout(function(){
+            //console.log('resize');
+            const divToScrollTo = document.getElementById(`carouselitem` + that.state.sliderPosition);
+            if (divToScrollTo) {
+                divToScrollTo.scrollIntoView({ behavior: 'smooth' });
+            }
+        }, 300)
+    }
     //Handlers to move to the next and previous slides
     prevSlideHandler = () => {
         // console.log("previous slide")
@@ -21,7 +33,7 @@ class Carousel extends Component {
         if (newPosition > 0){
             newPosition =  newPosition - 1 ;
         } else if (this.props.infinite) {
-            // console.log('infinity!!!!')
+            // console.log('infinity!')
             newPosition = this.props.children.length - 1;
         }  else {
             return
@@ -42,7 +54,7 @@ class Carousel extends Component {
             newPosition = newPosition + 1;
             // console.log('increased position: ' + this.state.sliderPosition)
         } else if (this.props.infinite) {
-            // console.log('infinity!!!!')
+            // console.log('infinity!')
             newPosition = 0
         } else {
             return //without this return, if inifinite scrolling is disabled we might see 2 elements overlap (in case one didn't occupy full width)
@@ -56,9 +68,8 @@ class Carousel extends Component {
 
     //Handler to jump to a specific slide
     jumpToSlideHandler = (id) => {
-        console.log("jump to slide " + id)
+        //console.log("jump to slide " + id)
         const divToScrollTo = document.getElementById(`carouselitem` + id);
-        console.log(divToScrollTo)
         if (divToScrollTo) {
             divToScrollTo.scrollIntoView({ behavior: 'smooth' });
         }
@@ -66,16 +77,16 @@ class Carousel extends Component {
     }
 
     keyPressHandler = (event) => {
-        console.log("key pressed " + event)
+        // console.log("key pressed " + event)
         if (event.key === "ArrowLeft"){
-            console.log("left pressed")
+            // console.log("left pressed")
             event.preventDefault();
             event.stopPropagation(); //does not affect parent 
             this.prevSlideHandler();
         }
         if (event.key === "ArrowRight"){
             //could've added response to space as well. But it will make it impossible to type if we have input in casourel!
-            console.log("right pressed");
+            // console.log("right pressed");
             event.preventDefault();
             event.stopPropagation();
             this.nextSlideHandler();
@@ -122,7 +133,7 @@ class Carousel extends Component {
         // console.log("current slider position: " + this.state.sliderPosition)
         return (
             <div>
-                <div className={classes.container} >
+                <div className={classes.Container} >
                     <div className={classes.LeftArrow} onClick={this.prevSlideHandler}>❰</div>
                     <div key={this.state.Displaykey}
                         className={classes.DisplayFrame} 
@@ -154,6 +165,13 @@ class Carousel extends Component {
             </div>       
         );
     }
+
+    componentWillUnmount() {
+        // console.log("unmounted")
+        document.removeEventListener('keydown', this.keyPressHandler)
+        window.removeEventListener('resize', this.resizeHandler);
+    }
 }
 
+//created by judabne - https://github.com/judabne
 export default Carousel;

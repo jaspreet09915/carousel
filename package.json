@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack serve --mode development --env development"
+    "start": "webpack serve --mode development --env development",
+    "build:prod": "webpack --config webpack.config.prod.js"
   },
   "author": "Judy Abi Nehme",
   "license": "ISC",
