@@ -20,7 +20,8 @@ You can add the component manually to your react project by downloading the ```c
 You get access to the code and you can modify it accordingly.
 
 Moreover, if you want to start a new React project with the carousel component in it, you can just clone this repository and then run ```npm install```.
-You will start with a new project with a demo Carousel in it. You can also use this setup to just run the example as well.
+You will start with a new project with a demo Carousel in it. You can also use this setup to just run the example as well. 
+_In case you go with this option, the project is set to run on localhost:8080_
 
 This package can be installed in your project using ```npm install judabne-react-carousel```.
 In case you are using CSS modules in react (v16.8+ - if you haven't manually set the css-loader - e.g you used ```create-react-app```)
