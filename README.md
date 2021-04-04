@@ -10,6 +10,9 @@ You can preview the carousel on https://judabne-react-carousel.web.app/.
 You can add a infinite to the carousel to make it scroll continously, it would scroll back to the first slide after it reaches the end
 ```<Carousel infinite>```
 
+This repository also includes a working example, similar to the one shown in the link above.
+You can download/clone this repository and set the project up using ```npm install```.
+
 # Installation
 This package can be installed in your project using ```npm install judabne-react-carousel```.
 In case you are using CSS modules in react (v16.8+ - if you haven't manually set the css-loader - e.g you used ```create-react-app```)
@@ -17,9 +20,6 @@ you can proceed by renaming the Carousel.css file to Carousel.module.css (do not
 
 You can also add the component manually to your react project by downloading the ```carousel/src/components/Carousel/``` from this repository.
 You get access to the code and you can modify it accordingly.
-
-This repository also includes a working example, similar to the one shown in the link above.
-You can download/clone this repository and set the project up using ```npm install```.
 
 # Proposed updates
 There CarouselSuggestions file in the ```carousel/src/components/Carousel/``` folder contains some proposed JS code.
