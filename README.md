@@ -14,6 +14,8 @@ This repository also includes a working example, similar to the one shown in the
 You can download/clone this repository and set the project up using ```npm install```.
 
 # Installation and Setup
+This project was created using Webpack and npm.
+
 You can add the component manually to your react project by downloading the ```carousel/src/components/Carousel/``` from this repository.
 You get access to the code and you can modify it accordingly.
 
