@@ -11,7 +11,7 @@ You can add a infinite to the carousel to make it scroll continously, it would s
 ```<Carousel infinite>```
 
 This repository also includes a working example, similar to the one shown in the link above.
-You can download/clone this repository and set the project up using ```npm install``` .
+You can download/clone this repository and set the project up using ```npm install``` . _See the Fresh Setup section below._
 
 # Installation and Setup
 This project was created using Webpack and npm.
