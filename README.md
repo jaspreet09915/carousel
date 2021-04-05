@@ -1,6 +1,7 @@
 # Carousel
 This is a React carousel that works using touch, keyboard, and swipes.
 This is a work in progress and it will be updated with time.
+The features of this carousel were tested on Chrome for Windows, Edge for Windows, Chrome for Android, Opera for Android, and Firefox for Android
 
 ## Features
 The carousel would display its children each on a slide.
