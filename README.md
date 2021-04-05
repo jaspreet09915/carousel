@@ -21,7 +21,7 @@ You get access to the code and you can modify it accordingly.
 
 Moreover, if you want to start a new React project with the carousel component in it, you can just clone this repository and then run ```npm install```.
 You will start with a new project with a demo Carousel in it. You can also use this setup to just run the example as well. 
-_In case you go with this option, you can cd to your project's directory, and type ```npm start```. The project is set to run on localhost:8080_
+_In case you go with this option, you can ```cd``` to your project's directory, and type ```npm start```. The project is set to run on ```localhost:8080```_
 
 # Proposed updates
 There CarouselSuggestions file in the ```carousel/src/components/Carousel/``` folder contains some proposed JS code.
