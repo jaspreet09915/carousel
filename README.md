@@ -7,7 +7,7 @@ The carousel would display its children each on a slide.
 It supports for now clicking the controls to move between slides. It also supports keyboard navigation and finger following swipes.
 You can preview the carousel on https://judabne-react-carousel.web.app/.
 
-You can add a infinite to the carousel to make it scroll continously, it would scroll back to the first slide after it reaches the end
+You can add a infinite to the carousel to make it scroll continously, it would scroll back to the first slide after it reaches the end.
 ```<Carousel infinite>```
 
 This repository also includes a working example, similar to the one shown in the link above.
