@@ -27,6 +27,7 @@ _In case you go with this option, the project is set to run on localhost:8080_
 In case you are using CSS modules in react (v16.8+ - if you haven't manually set the css-loader - e.g you used ```create-react-app```)
 you can proceed by renaming the Carousel.css file to Carousel.module.css (do not forget to change the import in Carousel.js to "Carousel.module.css" as well). ---!>
 
+
 # Proposed updates
 There CarouselSuggestions file in the ```carousel/src/components/Carousel/``` folder contains some proposed JS code.
 This code will be ameliorated in the future to add features to the carousel.
