@@ -23,9 +23,9 @@ Moreover, if you want to start a new React project with the carousel component i
 You will start with a new project with a demo Carousel in it. You can also use this setup to just run the example as well. 
 _In case you go with this option, the project is set to run on localhost:8080_
 
-This package can be installed in your project using ```npm install judabne-react-carousel```.
+<!--- This package can be installed in your project using ```npm install judabne-react-carousel```.
 In case you are using CSS modules in react (v16.8+ - if you haven't manually set the css-loader - e.g you used ```create-react-app```)
-you can proceed by renaming the Carousel.css file to Carousel.module.css (do not forget to change the import in Carousel.js to "Carousel.module.css" as well).
+you can proceed by renaming the Carousel.css file to Carousel.module.css (do not forget to change the import in Carousel.js to "Carousel.module.css" as well). ---!>
 
 # Proposed updates
 There CarouselSuggestions file in the ```carousel/src/components/Carousel/``` folder contains some proposed JS code.
