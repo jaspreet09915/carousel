@@ -1,177 +1,242 @@
-import React, {Component} from 'react';
+import React, {useState, useEffect} from 'react';
 import classes from './Carousel.css';
 
+const widthSpan = 101 //there is a 1% margin between elements - 101% to account for the margin right
 
-class Carousel extends Component {
-    state = {
-        sliderPosition: 0,
-        touchStartPosition: 0,
-        touchEndPosition: 0,
-    }
+function carousel(props) {
+    // displayed slide
+    const [sliderPosition, setSliderPosition] = useState(0);
+    // touch state
+    const [touchStartPosition, setTouchStartPosition] = useState(0);
+    const [touchEndPosition, setTouchEndPosition] = useState(0);
+    // mouse state
+    const [mouseStartPosition, setMouseStartPosition] = useState(0);
+    const [mouseEndPosition, setMouseEndPosition] = useState(0);
+    const [mouseClicked, setMouseClicked] = useState(false);
+    // destructuring props
+    const { children, infinite } = props;
 
-    componentDidMount() {
-        // console.log("mounted")
-        document.addEventListener('keydown', this.keyPressHandler)
-        window.addEventListener('resize', this.resizeHandler);
-    }
-    
-    resizeHandler = () => {
-        var that = this;
-        //on resize rescroll to same view
-        setTimeout(function(){
-            //console.log('resize');
-            const divToScrollTo = document.getElementById(`carouselitem` + that.state.sliderPosition);
-            if (divToScrollTo) {
-                divToScrollTo.scrollIntoView({ behavior: 'smooth' });
-            }
-        }, 300)
-    }
     //Handlers to move to the next and previous slides
-    prevSlideHandler = () => {
-        // console.log("previous slide")
-        let newPosition = this.state.sliderPosition;
+    const prevSlideHandler = () => {
+        //console.log("previous slide");
+        let newPosition = sliderPosition;
         if (newPosition > 0){
             newPosition =  newPosition - 1 ;
-        } else if (this.props.infinite) {
+        } else if (infinite) {
             // console.log('infinity!')
-            newPosition = this.props.children.length - 1;
-        }  else {
-            return
-        }
-        const divToScrollTo = document.getElementById(`carouselitem` + newPosition);
-        if (divToScrollTo) {
-            divToScrollTo.scrollIntoView({ behavior: 'smooth' });
-        }
-        this.setState({ sliderPosition: newPosition}) //did this since updating state is async, leades to problems in scrolling
-        return;
+            newPosition = children.length - 1;
+        } //with the new way to handle swipes, we can remove the return from the last else which handles infinite disabled
+        translateFullSlides(newPosition);
+        setSliderPosition(newPosition);
     }
 
-    nextSlideHandler = () => {
+    const nextSlideHandler = () => {
         // console.log("next slide")
-        // console.log('old position: ' + this.state.sliderPosition)
-        let newPosition = this.state.sliderPosition;
-        if (newPosition < this.props.children.length - 1){
+        let newPosition = sliderPosition;
+        if (newPosition < children.length - 1){
             newPosition = newPosition + 1;
-            // console.log('increased position: ' + this.state.sliderPosition)
-        } else if (this.props.infinite) {
-            // console.log('infinity!')
+        } else if (infinite) {
+            //console.log('infinity!')
             newPosition = 0
-        } else {
-            return //without this return, if inifinite scrolling is disabled we might see 2 elements overlap (in case one didn't occupy full width)
-        }
-        const divToScrollTo = document.getElementById(`carouselitem` + newPosition);
-        if (divToScrollTo) {
-            divToScrollTo.scrollIntoView({ behavior: 'smooth' });
-        }
-        this.setState({ sliderPosition: newPosition}) 
+        } 
+        translateFullSlides(newPosition);
+        setSliderPosition(newPosition);
     }
 
     //Handler to jump to a specific slide
-    jumpToSlideHandler = (id) => {
+    const jumpToSlideHandler = (id) => {
         //console.log("jump to slide " + id)
-        const divToScrollTo = document.getElementById(`carouselitem` + id);
-        if (divToScrollTo) {
-            divToScrollTo.scrollIntoView({ behavior: 'smooth' });
-        }
-        this.setState({sliderPosition: id})
+        let toTranslate = (id);
+        translateFullSlides(toTranslate);
+        setSliderPosition(id)
     }
 
-    keyPressHandler = (event) => {
-        // console.log("key pressed " + event)
+    // Translating slides fully or partially
+    const translateFullSlides = (newPosition) => {
+        let toTranslate = -widthSpan * newPosition
+        //console.log("translating " + toTranslate + "%")
+        for (var i = 0; i< children.length; i++){
+            let elem = document.getElementById(`carouselitem` + i);
+            elem._currentTranslation = toTranslate;
+            elem.style.transform = `translateX(`+ elem._currentTranslation +`%` //translated on X axis as before. Used % instead of px.
+            //console.log('[' + i +']: '+ elem._currentTranslation );
+        }
+    }
+
+    const translatePartialSlides = (toTranslate) => {
+        let currentTranslation = -sliderPosition * widthSpan
+            //console.log ("currentTranslation: " + currentTranslation)
+            for (var i = 0; i< children.length; i++){
+                let elem = document.getElementById(`carouselitem` + i);
+                elem._currentTranslation = currentTranslation + toTranslate;
+                elem.style.transform = `translateX(`+ elem._currentTranslation +`%)` //translated on X axis as before. Used % instead of px.
+                //console.log('[' + i +']: '+ elem._currentTranslation );
+            }
+    }
+
+    // Handling Keyboard
+    const keyPressHandler = (event) => {
+        //Arrow Navigation
         if (event.key === "ArrowLeft"){
             // console.log("left pressed")
             event.preventDefault();
             event.stopPropagation(); //does not affect parent 
-            this.prevSlideHandler();
+            prevSlideHandler();
+            return // do not continue to the other checks
         }
         if (event.key === "ArrowRight"){
-            //could've added response to space as well. But it will make it impossible to type if we have input in casourel!
+            // could've added response to space as well. But it will make it impossible to type if we have input in casourel!
             // console.log("right pressed");
             event.preventDefault();
             event.stopPropagation();
-            this.nextSlideHandler();
+            nextSlideHandler();
+            return
         }
+        // Number navigation
+        if (49 <= event.keyCode && event.keyCode <= 57 ){
+            //pressing between 1 and 9 to navigate first 9 elements
+            const arrayPos = event.keyCode - 49;
+            //pressing one jumps to first child
+            //console.log("number pressed: " + event.keyCode + "... corresponding to " + (event.keyCode - 49));
+            if (arrayPos <= children.length){
+                jumpToSlideHandler(arrayPos);
+            }
+            return
+        }
+        // pressing 0 goes to 9th element (0-index)
+        if (event.keyCode === 48){
+            if (children.length >= 10)
+            jumpToSlideHandler(9);
+        }            
     }
 
-    touchStartHandler = (e) => {
+    // Handling Touches
+    const touchStartHandler = (e) => {
         // console.log('touchstart')
-        this.setState({touchStartPosition: e.targetTouches[0].clientX})
+        setTouchStartPosition(e.targetTouches[0].clientX)
     }
 
-    touchMoveHandler = (e) => {
+    const touchMoveHandler = (e) => {
         // console.log('touchmove')
-        this.setState({touchEndPosition: e.targetTouches[0].clientX})
-        let elem = document.getElementById(`carouselitem` + this.state.sliderPosition)
-        // console.log(elem)
-        let translateDist = this.state.touchEndPosition - this.state.touchStartPosition
-        // console.log("moving: " + translateDist  + " px")
-        elem.setAttribute("style", `transform: translate(`+translateDist+`px)`)
+        setTouchEndPosition(e.targetTouches[0].clientX)
+        var frameWidth = document.getElementById('DisplayFrame').offsetWidth;
+        let translateDist = (touchEndPosition - touchStartPosition)/frameWidth*100
+        translatePartialSlides(translateDist)
     }
     
-    touchEndHandler = (e) => {
-        //we set the element that we want to return to its position before changing the sliderPosition
-        let elem = document.getElementById(`carouselitem` + this.state.sliderPosition)
-        //snap the element to its position
-        elem.classList.add(classes.SlowAnimation);
-        elem.setAttribute("style", `transform: translateX(`+ (this.state.touchStartPosition - this.state.touchEndPosition) +`px) 0.5s ease-in-out`)
-        // console.log(elem)
+    const touchEndHandler = (e) => {
         //left swipe
-        if (this.state.touchStartPosition - this.state.touchEndPosition > 100) {
+        if (touchStartPosition - touchEndPosition > 100) {
             // console.log('touchend left swipe');
-            this.nextSlideHandler()
+            nextSlideHandler()
         }
         //right swipe
-        else if (this.state.touchStartPosition - this.state.touchEndPosition < -100) {
+        else if (touchStartPosition - touchEndPosition < -100) {
             // console.log('touchend right swipe');
-            this.prevSlideHandler()
+            prevSlideHandler()
+        } else {
+            //swipe cancelled
+            jumpToSlideHandler(sliderPosition);
         }
-        elem.classList.remove(classes.SlowAnimation);
-        // Initially had a case for swipe cancelled. That was when scrolling instead of translating
+       
     }
 
-    render () {
-        // console.log("current slider position: " + this.state.sliderPosition)
-        return (
-            <div>
-                <div className={classes.Container} >
-                    <div className={classes.LeftArrow} onClick={this.prevSlideHandler}>❰</div>
-                    <div key={this.state.Displaykey}
-                        className={classes.DisplayFrame} 
-                        id="DisplayFrame" 
-                        onTouchStart={(e) => this.touchStartHandler(e)}
-                        onTouchMove={(e) => this.touchMoveHandler(e)}
-                        onTouchEnd={(e) =>  this.touchEndHandler(e)}
-                    >
-                        {this.props.children.map((child, index) => (
-                            <div className={classes.CarouselItem} id={`carouselitem` + index} key={index}>{this.props.children[index]}</div>
-                        ))}
-                    </div>
-                    <div className={classes.RightArrow} onClick={this.nextSlideHandler}>❱</div>
+    // Handling Mouse swipes
+    const mouseStartHandler = (e) => {
+        e.preventDefault();
+        console.log('mousestart ' + e.clientX);
+        setMouseStartPosition(e.clientX);
+        setMouseClicked(true);
+    }
+
+    const mouseMoveHandler = (e) => {
+        e.preventDefault();
+        var frameWidth = document.getElementById('DisplayFrame').offsetWidth;
+        //doing this to keep working in %
+        if (mouseClicked === true){
+            setMouseEndPosition(e.clientX)
+            let translateDist = (mouseEndPosition - mouseStartPosition)/frameWidth*100
+            translatePartialSlides(translateDist)
+        }
+        
+    }
+
+    const mouseEndHandler = (e) => {
+        console.log('mouse end');
+        if (mouseClicked === true){
+            //left swipe
+            if (mouseStartPosition - mouseEndPosition > 100) {
+                // console.log('mouseend left swipe');
+                nextSlideHandler()
+            }
+            //right swipe
+            else if (mouseStartPosition - mouseEndPosition < -100) {
+                // console.log('mouseend right swipe');
+                prevSlideHandler()
+            } 
+            //no swipe
+            else {
+                jumpToSlideHandler(sliderPosition);
+            }
+            setMouseClicked(false);
+        }
+
+    }
+
+
+    useEffect(() => {
+        window.addEventListener('keydown', keyPressHandler);
+
+        // cleanup
+        return () => {
+            window.removeEventListener('keydown', keyPressHandler);
+        };
+    });
+
+    return (
+        
+        <div>
+            <div className={classes.Container}>
+                <div className={classes.LeftArrow} onClick={prevSlideHandler}>❰</div>
+                <div 
+                    className={classes.DisplayFrame} 
+                    id="DisplayFrame" 
+                    onTouchStart={(e) => touchStartHandler(e)}
+                    onTouchMove={(e) => touchMoveHandler(e)}
+                    onTouchEnd={(e) =>  touchEndHandler(e)}
+                    onMouseDown={(e) => mouseStartHandler(e)}
+                    onMouseMove={(e) => mouseMoveHandler(e)}
+                    onMouseUp={(e) =>  mouseEndHandler(e)}
+                    onMouseLeave = {(e) =>mouseEndHandler(e)}
+                    //without onMouseLeave we might face a problem
+                    //onMouseLeave is better than onMouseOut if we have elements that do not occupy the full width
+                >
+                    {children.map((child, index) => (
+                        <div className={classes.CarouselItem} id={`carouselitem` + index} key={index}>{children[index]}</div>
+                    ))}
+                    
                 </div>
+                <div className={classes.RightArrow} onClick={nextSlideHandler}>❱</div>
+            </div>
 
-                <div className={classes.Navigation}>
-                    {this.props.children.map((child, index) => (
-                            <div 
-                                className={this.state.sliderPosition === index 
-                                    ? classes.PositionIndicator.concat(' '+ classes.CurrentPosition) 
-                                    : classes.PositionIndicator} 
-                                key={index}
-                                onClick = {() => this.jumpToSlideHandler(index)}
-                                >    
-                            </div>
-                        )
-                    )}
-                </div>
-            </div>       
-        );
-    }
-
-    componentWillUnmount() {
-        // console.log("unmounted")
-        document.removeEventListener('keydown', this.keyPressHandler)
-        window.removeEventListener('resize', this.resizeHandler);
-    }
+            <div className={classes.Navigation}>
+                {children.map((child, index) => (
+                        <div 
+                            className={sliderPosition === index 
+                                ? classes.PositionIndicator.concat(' '+ classes.CurrentPosition) 
+                                : classes.PositionIndicator} 
+                            key={index}
+                            onClick = {() => jumpToSlideHandler(index)}
+                            >
+                            {index}
+                        </div>
+                    )
+                )}
+            </div>
+        </div>       
+    );
+    
 }
 
 //created by judabne - https://github.com/judabne
-export default Carousel;
+export default carousel;
