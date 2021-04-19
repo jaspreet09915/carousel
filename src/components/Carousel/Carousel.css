@@ -21,15 +21,18 @@
 }
 
 .CarouselItem{
-    /* touch-action: none; */
+    touch-action: none;
     height: 100%;
     width: 100%; 
     display: inline-block; 
     vertical-align: top;
-    margin-right: 1%;
-    transition: all 0.1s ease-in-out;
-    /* user-select: none; */
+    margin-right: 0.1%;
+    transition: all 50ms ease-in-out;
     /* the margin avoids slices from adjacent elements appearing */
+}
+
+.SlowAnimation{
+    transition: all 0.5s ease-out;
 }
 
 .LeftArrow{
@@ -47,7 +50,6 @@
 }
 .LeftArrow:active{
     color: #206ebd;
-    
 }
 
 .RightArrow{
@@ -110,11 +112,6 @@ img{
     height: 100%;
     max-width: 100%;
     background-color: none;
-}
-
-.stop-scrolling {
-    width: 100%;
-    overflow: hidden;
 }
 
 @media (max-width: 600px) {

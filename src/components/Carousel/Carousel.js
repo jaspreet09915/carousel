@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import classes from './Carousel.css';
 
-const widthSpan = 101 //there is a 1% margin between elements - 101% to account for the margin right
+const widthSpan = 100.1 //there is a 1% margin between elements - 101% to account for the margin right
 
 function carousel(props) {
     // displayed slide
@@ -9,10 +9,13 @@ function carousel(props) {
     // touch state
     const [touchStartPosition, setTouchStartPosition] = useState(0);
     const [touchEndPosition, setTouchEndPosition] = useState(0);
+    const [touched, setTouched] = useState(false);
+    const [swiped, setSwiped] = useState(false);
     // mouse state
     const [mouseStartPosition, setMouseStartPosition] = useState(0);
     const [mouseEndPosition, setMouseEndPosition] = useState(0);
     const [mouseClicked, setMouseClicked] = useState(false);
+    const [mouseSwiped, setMouseSwiped] = useState(false);
     // destructuring props
     const { children, infinite } = props;
 
@@ -57,21 +60,24 @@ function carousel(props) {
         //console.log("translating " + toTranslate + "%")
         for (var i = 0; i< children.length; i++){
             let elem = document.getElementById(`carouselitem` + i);
-            elem._currentTranslation = toTranslate;
-            elem.style.transform = `translateX(`+ elem._currentTranslation +`%` //translated on X axis as before. Used % instead of px.
-            //console.log('[' + i +']: '+ elem._currentTranslation );
+            elem.classList.add(classes.SlowAnimation)
+            elem.style.transform = `translateX(`+ toTranslate +`%)` //translated on X axis as before. Used % instead of px.
+            setTimeout(function(){
+                elem.classList.remove(classes.SlowAnimation)
+            }, 500) //give the transition some time to finish before removing the class
         }
     }
 
+    // Used for finger or mouse swipes before the user completes the action
     const translatePartialSlides = (toTranslate) => {
         let currentTranslation = -sliderPosition * widthSpan
-            //console.log ("currentTranslation: " + currentTranslation)
-            for (var i = 0; i< children.length; i++){
-                let elem = document.getElementById(`carouselitem` + i);
-                elem._currentTranslation = currentTranslation + toTranslate;
-                elem.style.transform = `translateX(`+ elem._currentTranslation +`%)` //translated on X axis as before. Used % instead of px.
-                //console.log('[' + i +']: '+ elem._currentTranslation );
-            }
+        //console.log ("currentTranslation: " + currentTranslation)
+        for (var i = 0; i< children.length; i++){
+            let elem = document.getElementById(`carouselitem` + i);
+            elem._currentTranslation = currentTranslation + toTranslate;
+            elem.style.transform = `translateX(`+ elem._currentTranslation +`%)` //translated on X axis as before. Used % instead of px.
+            //console.log('[' + i +']: '+ elem._currentTranslation );
+        }
     }
 
     // Handling Keyboard
@@ -113,7 +119,8 @@ function carousel(props) {
     // Handling Touches
     const touchStartHandler = (e) => {
         // console.log('touchstart')
-        setTouchStartPosition(e.targetTouches[0].clientX)
+        setTouchStartPosition(e.targetTouches[0].clientX);
+        setTouched(true);
     }
 
     const touchMoveHandler = (e) => {
@@ -122,29 +129,36 @@ function carousel(props) {
         var frameWidth = document.getElementById('DisplayFrame').offsetWidth;
         let translateDist = (touchEndPosition - touchStartPosition)/frameWidth*100
         translatePartialSlides(translateDist)
+        if(touched === true){
+            setSwiped(true)
+        }
     }
     
     const touchEndHandler = (e) => {
-        //left swipe
-        if (touchStartPosition - touchEndPosition > 100) {
-            // console.log('touchend left swipe');
-            nextSlideHandler()
+        e.preventDefault //supposed to stop scrolling on iOS. I don't have iOS to try it
+        if (swiped){ //without this condition, tapping might result in random behaviour
+            //left swipe
+            if (touchStartPosition - touchEndPosition > 75) {
+                // console.log('touchend left swipe');
+                nextSlideHandler()
+            }
+            //right swipe
+            else if (touchStartPosition - touchEndPosition < -75) {
+                // console.log('touchend right swipe');
+                prevSlideHandler()
+            } else {
+                //swipe cancelled
+                jumpToSlideHandler(sliderPosition);
+            }  
         }
-        //right swipe
-        else if (touchStartPosition - touchEndPosition < -100) {
-            // console.log('touchend right swipe');
-            prevSlideHandler()
-        } else {
-            //swipe cancelled
-            jumpToSlideHandler(sliderPosition);
-        }
-       
+        setTouched(false);
+        setSwiped(false);
     }
 
     // Handling Mouse swipes
     const mouseStartHandler = (e) => {
         e.preventDefault();
-        console.log('mousestart ' + e.clientX);
+        //console.log('mousestart ' + e.clientX);
         setMouseStartPosition(e.clientX);
         setMouseClicked(true);
     }
@@ -156,14 +170,14 @@ function carousel(props) {
         if (mouseClicked === true){
             setMouseEndPosition(e.clientX)
             let translateDist = (mouseEndPosition - mouseStartPosition)/frameWidth*100
-            translatePartialSlides(translateDist)
+            translatePartialSlides(translateDist);
+            setMouseSwiped(true);
         }
-        
     }
 
-    const mouseEndHandler = (e) => {
-        console.log('mouse end');
-        if (mouseClicked === true){
+    const mouseEndHandler = () => {
+        // console.log('mouse end');
+        if (mouseSwiped === true){ //prevent undesired slide changes if a click without moving was registered
             //left swipe
             if (mouseStartPosition - mouseEndPosition > 100) {
                 // console.log('mouseend left swipe');
@@ -178,11 +192,16 @@ function carousel(props) {
             else {
                 jumpToSlideHandler(sliderPosition);
             }
-            setMouseClicked(false);
         }
-
+        setMouseClicked(false);
+        setMouseSwiped(false);
     }
 
+    const wheelHandler = () =>{
+        //this handler specifically targets horizontal-scrolling with a laptop touchpad
+        //disable scrolling to prevent ruining the view
+        document.getElementById("DisplayFrame").scrollLeft = 0;
+    }
 
     useEffect(() => {
         window.addEventListener('keydown', keyPressHandler);
@@ -194,11 +213,10 @@ function carousel(props) {
     });
 
     return (
-        
         <div>
             <div className={classes.Container}>
                 <div className={classes.LeftArrow} onClick={prevSlideHandler}>❰</div>
-                <div 
+                <div
                     className={classes.DisplayFrame} 
                     id="DisplayFrame" 
                     onTouchStart={(e) => touchStartHandler(e)}
@@ -206,15 +224,16 @@ function carousel(props) {
                     onTouchEnd={(e) =>  touchEndHandler(e)}
                     onMouseDown={(e) => mouseStartHandler(e)}
                     onMouseMove={(e) => mouseMoveHandler(e)}
-                    onMouseUp={(e) =>  mouseEndHandler(e)}
-                    onMouseLeave = {(e) =>mouseEndHandler(e)}
+                    onMouseUp={() =>  mouseEndHandler()}
+                    onMouseLeave = {() =>mouseEndHandler()}
                     //without onMouseLeave we might face a problem
                     //onMouseLeave is better than onMouseOut if we have elements that do not occupy the full width
+                    // onScroll = {(e) => scrollHandler(e)} //prevent scrolling from displaying faulty results.
+                    onWheel = {() => wheelHandler()}
                 >
                     {children.map((child, index) => (
                         <div className={classes.CarouselItem} id={`carouselitem` + index} key={index}>{children[index]}</div>
-                    ))}
-                    
+                    ))}  
                 </div>
                 <div className={classes.RightArrow} onClick={nextSlideHandler}>❱</div>
             </div>
@@ -228,7 +247,6 @@ function carousel(props) {
                             key={index}
                             onClick = {() => jumpToSlideHandler(index)}
                             >
-                            {index}
                         </div>
                     )
                 )}
