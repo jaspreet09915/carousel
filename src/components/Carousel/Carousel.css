@@ -28,7 +28,7 @@
     vertical-align: top;
     margin-right: 0.1%;
     /* the margin avoids slices from adjacent elements appearing */
-    transition: all 100ms ease-in-out;
+    transition: all 50ms ease-in-out;
     /* 10ms results in snappier performance but seem to cause problems on old devices */
 }
 
