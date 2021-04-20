@@ -118,6 +118,9 @@ function carousel(props) {
     const touchStartHandler = (e) => {
         // console.log('touchstart')
         setTouchStartPosition(e.targetTouches[0].clientX);
+        setTouchEndPosition(e.targetTouches[0].clientX);
+        //it is cruicial to setTouchEndPosition before moving to touchMoveHandler
+        //otherwise under extreme testing the slide might jump in an undesired direction if swipes or on different sides of the screen
         setTouched(true);
     }
 
@@ -158,15 +161,18 @@ function carousel(props) {
         e.preventDefault();
         //console.log('mousestart ' + e.clientX);
         setMouseStartPosition(e.clientX);
+        setMouseEndPosition(e.clientX);
+        //similar to touch handlers we set the setMouseEndPosition at this point
+        //otherwise under extreme testing the slide might show a short jump in an undesired direction if swipes or on different sides of the screen
         setMouseClicked(true);
     }
 
     const mouseMoveHandler = (e) => {
         e.preventDefault();
         var frameWidth = document.getElementById('DisplayFrame').offsetWidth;
-        //doing this to keep working in %
         if (mouseClicked === true){
-            setMouseEndPosition(e.clientX)
+            setMouseEndPosition(e.clientX);
+            //doing this to keep working in %
             let translateDist = (mouseEndPosition - mouseStartPosition)/frameWidth*100
             translatePartialSlides(translateDist);
             setMouseSwiped(true);
