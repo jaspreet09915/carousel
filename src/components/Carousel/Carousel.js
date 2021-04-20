@@ -64,19 +64,18 @@ function carousel(props) {
             elem.style.transform = `translateX(`+ toTranslate +`%)` //translated on X axis as before. Used % instead of px.
             setTimeout(function(){
                 elem.classList.remove(classes.SlowAnimation)
-            }, 500) //give the transition some time to finish before removing the class
+            }, 500) //give the transition time to finish before removing the class
+            // I think this is better than a transition listener since we know the duration
         }
     }
 
     // Used for finger or mouse swipes before the user completes the action
     const translatePartialSlides = (toTranslate) => {
         let currentTranslation = -sliderPosition * widthSpan
-        //console.log ("currentTranslation: " + currentTranslation)
+        let totalTranslation = currentTranslation + toTranslate
         for (var i = 0; i< children.length; i++){
             let elem = document.getElementById(`carouselitem` + i);
-            elem._currentTranslation = currentTranslation + toTranslate;
-            elem.style.transform = `translateX(`+ elem._currentTranslation +`%)` //translated on X axis as before. Used % instead of px.
-            //console.log('[' + i +']: '+ elem._currentTranslation );
+            elem.style.transform = `translateX(`+ totalTranslation +`%)` //translated on X axis as before. Used % instead of px.
         }
     }
 
@@ -91,7 +90,6 @@ function carousel(props) {
             return // do not continue to the other checks
         }
         if (event.key === "ArrowRight"){
-            // could've added response to space as well. But it will make it impossible to type if we have input in casourel!
             // console.log("right pressed");
             event.preventDefault();
             event.stopPropagation();
@@ -135,8 +133,8 @@ function carousel(props) {
     }
     
     const touchEndHandler = (e) => {
-        e.preventDefault //supposed to stop scrolling on iOS. I don't have iOS to try it
-        if (swiped){ //without this condition, tapping might result in random behaviour
+        e.preventDefault 
+        if (swiped){ //without this condition, tapping might result in random slide swipes
             //left swipe
             if (touchStartPosition - touchEndPosition > 75) {
                 // console.log('touchend left swipe');
@@ -228,7 +226,6 @@ function carousel(props) {
                     onMouseLeave = {() =>mouseEndHandler()}
                     //without onMouseLeave we might face a problem
                     //onMouseLeave is better than onMouseOut if we have elements that do not occupy the full width
-                    // onScroll = {(e) => scrollHandler(e)} //prevent scrolling from displaying faulty results.
                     onWheel = {() => wheelHandler()}
                 >
                     {children.map((child, index) => (
@@ -253,7 +250,6 @@ function carousel(props) {
             </div>
         </div>       
     );
-    
 }
 
 //created by judabne - https://github.com/judabne
