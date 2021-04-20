@@ -17,6 +17,7 @@ You can download/clone this repository and set the project up using ```npm insta
 ## Modifications
 * Removed the resize-handler. Since the carousel was updated to use transitions, the resize handler became insignificant.
 * Added the ability to navigate with they keyboard number row. 1 goes to the first element, 0 goes to the tenth.
+* Fixed the a short undesired jump when swiping on alternating sides of the screen.
 
 # Installation and Setup
 This project was created using Webpack and npm.
