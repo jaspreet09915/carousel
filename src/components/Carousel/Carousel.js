@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import classes from './Carousel.css';
 
-const widthSpan = 100.1 //there is a 1% margin between elements - 101% to account for the margin right
+const widthSpan = 100.1; //there is a 1% margin between elements - 101% to account for the margin right
 
 function carousel(props) {
     // displayed slide
@@ -40,7 +40,7 @@ function carousel(props) {
             newPosition = newPosition + 1;
         } else if (infinite) {
             //console.log('infinity!')
-            newPosition = 0
+            newPosition = 0;
         } 
         translateFullSlides(newPosition);
         setSliderPosition(newPosition);
@@ -51,7 +51,7 @@ function carousel(props) {
         //console.log("jump to slide " + id)
         let toTranslate = (id);
         translateFullSlides(toTranslate);
-        setSliderPosition(id)
+        setSliderPosition(id);
     }
 
     // Translating slides fully or partially
@@ -60,10 +60,10 @@ function carousel(props) {
         //console.log("translating " + toTranslate + "%")
         for (var i = 0; i< children.length; i++){
             let elem = document.getElementById(`carouselitem` + i);
-            elem.classList.add(classes.SlowAnimation)
-            elem.style.transform = `translateX(`+ toTranslate +`%)` //translated on X axis as before. Used % instead of px.
+            elem.classList.add(classes.SlowAnimation);
+            elem.style.transform = `translateX(`+ toTranslate +`%)`; //translated on X axis as before. Used % instead of px.
             setTimeout(function(){
-                elem.classList.remove(classes.SlowAnimation)
+                elem.classList.remove(classes.SlowAnimation);
             }, 500) //give the transition time to finish before removing the class
             // I think this is better than a transition listener since we know the duration
         }
@@ -71,11 +71,11 @@ function carousel(props) {
 
     // Used for finger or mouse swipes before the user completes the action
     const translatePartialSlides = (toTranslate) => {
-        let currentTranslation = -sliderPosition * widthSpan
-        let totalTranslation = currentTranslation + toTranslate
+        let currentTranslation = -sliderPosition * widthSpan;
+        let totalTranslation = currentTranslation + toTranslate;
         for (var i = 0; i< children.length; i++){
             let elem = document.getElementById(`carouselitem` + i);
-            elem.style.transform = `translateX(`+ totalTranslation +`%)` //translated on X axis as before. Used % instead of px.
+            elem.style.transform = `translateX(`+ totalTranslation +`%)`;
         }
     }
 
@@ -126,12 +126,12 @@ function carousel(props) {
 
     const touchMoveHandler = (e) => {
         // console.log('touchmove')
-        setTouchEndPosition(e.targetTouches[0].clientX)
+        setTouchEndPosition(e.targetTouches[0].clientX);
         var frameWidth = document.getElementById('DisplayFrame').offsetWidth;
-        let translateDist = (touchEndPosition - touchStartPosition)/frameWidth*100
-        translatePartialSlides(translateDist)
+        let translateDist = (touchEndPosition - touchStartPosition)/frameWidth*100;
+        translatePartialSlides(translateDist);
         if(touched === true){
-            setSwiped(true)
+            setSwiped(true);
         }
     }
     
@@ -141,12 +141,12 @@ function carousel(props) {
             //left swipe
             if (touchStartPosition - touchEndPosition > 75) {
                 // console.log('touchend left swipe');
-                nextSlideHandler()
+                nextSlideHandler();
             }
             //right swipe
             else if (touchStartPosition - touchEndPosition < -75) {
                 // console.log('touchend right swipe');
-                prevSlideHandler()
+                prevSlideHandler();
             } else {
                 //swipe cancelled
                 jumpToSlideHandler(sliderPosition);
@@ -170,10 +170,10 @@ function carousel(props) {
     const mouseMoveHandler = (e) => {
         e.preventDefault();
         var frameWidth = document.getElementById('DisplayFrame').offsetWidth;
+        //doing this to keep working in %
         if (mouseClicked === true){
             setMouseEndPosition(e.clientX);
-            //doing this to keep working in %
-            let translateDist = (mouseEndPosition - mouseStartPosition)/frameWidth*100
+            let translateDist = (mouseEndPosition - mouseStartPosition)/frameWidth*100;
             translatePartialSlides(translateDist);
             setMouseSwiped(true);
         }
@@ -185,12 +185,12 @@ function carousel(props) {
             //left swipe
             if (mouseStartPosition - mouseEndPosition > 100) {
                 // console.log('mouseend left swipe');
-                nextSlideHandler()
+                nextSlideHandler();
             }
             //right swipe
             else if (mouseStartPosition - mouseEndPosition < -100) {
                 // console.log('mouseend right swipe');
-                prevSlideHandler()
+                prevSlideHandler();
             } 
             //no swipe
             else {
