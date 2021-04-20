@@ -14,6 +14,10 @@ You can add a infinite to the carousel to make it scroll continously, it would s
 This repository also includes a working example, similar to the one shown in the link above.
 You can download/clone this repository and set the project up using ```npm install``` . _See the Fresh Setup section below._
 
+## Modifications
+* Removed the resize-handler. Since the carousel was updated to use transitions, the resize handler became insignificant.
+* Added the ability to navigate with they keyboard number row. 1 goes to the first element, 0 goes to the tenth.
+
 # Installation and Setup
 This project was created using Webpack and npm.
 
