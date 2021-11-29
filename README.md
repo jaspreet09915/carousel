@@ -18,6 +18,8 @@ You can download/clone this repository and set the project up using ```npm insta
 * Removed the resize-handler. Since the carousel was updated to use transitions, the resize handler became insignificant.
 * Added the ability to navigate with they keyboard number row. 1 goes to the first element, 0 goes to the tenth.
 * Fixed the a short undesired jump when swiping on alternating sides of the screen.
+* Added the ability to add a timer so that slides autoadvance. This is passed through props (e.g timer={2000})
+* Added the option to cancel the timer after detecting manual input. This is passed through props
 
 # Installation and Setup
 This project was created using Webpack and npm.
@@ -35,8 +37,6 @@ There CarouselSuggestions file in the ```carousel/src/components/Carousel/``` fo
 This code will be ameliorated in the future to add features to the carousel.
 Below you will find features that I plan to add in the future.
 
-* Timer: The timer is supposed to move to the next slide in the carousel. Its code is working, yet it needs to be reset on click, swipe, and keyboard input.
-* Timer interval: Set a given time interval for the timer
 * Pausing timer: After the timer is added, I plan to add an option to manually pause the timer.
 * Multislide display
 

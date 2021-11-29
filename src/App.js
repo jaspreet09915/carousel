@@ -5,7 +5,7 @@ function app() {
     return (
         <div>
             <h5 style={{textAlign: "center"}}>Carousel</h5>
-            <Carousel infinite>
+            <Carousel timer={2000} stopOnManual>
                 <img src="https://images.unsplash.com/photo-1595835018349-198460e1d309?ixid=MXwxMjA3fDB8MHxzZWFyY2h8Mnx8MTYlM0E5fGVufDB8fDB8&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="sample image"/>
                 <img src="https://images.all-free-download.com/images/graphicthumb/beautiful_scenery_02_hd_picture_166319.jpg" alt="sample image"/>
                 <img src="https://i.pinimg.com/originals/7b/c1/24/7bc12410da0124244008b81c5f9e37ec.jpg" alt="sample image"/>
